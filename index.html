@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>हिन्दी न्यूज़</title>
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <h1>हिन्दी न्यूज़</h1>
+    <div class="top-actions">
+      <button id="refreshBtn" title="Refresh" aria-label="Refresh">↻</button>
+      <button id="listBtn" title="All videos" aria-label="All videos">☰</button>
+    </div>
+  </div>
+  <nav id="chips" aria-label="Channels"></nav>
+</header>
+
+<main id="reel" aria-label="Videos, newest first"></main>
+
+<div id="stage">
+  <div id="playerBox">
+    <div id="player"></div>
+    <div id="taplayer" title="Tap to play / pause"></div>
+  </div>
+</div>
+
+<div id="soundPill" hidden>🔊 Tap for sound</div>
+
+<div id="overlay">
+  <div id="ovTitle">Loading…</div>
+  <div id="ovMeta"></div>
+  <div id="ovBtns">
+    <button id="prevBtn">↑ Prev</button>
+    <button id="nextBtn">Next ↓</button>
+    <button id="muteBtn" aria-label="Mute / unmute">🔇</button>
+    <button id="fsBtn" aria-label="Fullscreen">⛶</button>
+    <a id="ytLink" target="_blank" rel="noopener">YouTube ↗</a>
+  </div>
+</div>
+
+<div id="listview" hidden>
+  <div class="lv-head">
+    <h2>All videos</h2>
+    <button id="listClose" aria-label="Close">✕</button>
+  </div>
+  <div id="lvMeta"></div>
+  <div id="lvRows"></div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
