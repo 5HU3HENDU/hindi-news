@@ -1,8 +1,10 @@
-/* Hindi News v2 — reel-style player.
+/* Hindi News v3 — reel-style player.
    One merged feed (newest first) across 5 Hindi news channels.
    Start gate: tap the big Start button and the newest video plays with sound.
    Skip like a reel: swipe left/right, scroll, arrow keys, or Prev / Next.
-   Navigation slides the video + heading in the direction you moved.
+   Navigation slides the video + headline in the direction you moved.
+   The headline sits under the video in full (never clipped); the video's
+   thumbnail, blurred and darkened, fills the screen behind it.
    Data: videos.json (snapshot). Best-effort live refresh via the public
    YouTube RSS feeds through a CORS proxy; snapshot stands if that fails. */
 (function () {
@@ -11,8 +13,7 @@
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var data = null;          // {generatedAt, channels, videos}
-  var list = [];            // filtered videos
-  var filter = 'All';
+  var list = [];            // all videos, newest first (no channel filter UI)
   var index = 0, prevIndex = 0;
   var player = null, playerReady = false, apiReady = false, dataReady = false;
   var started = false, muted = true, liveNote = '';
@@ -49,12 +50,16 @@
   /* ---------- data ---------- */
 
   function loadData() {
-    fetch('videos.json?v=2')
+    fetch('videos.json?v=3')
       .then(function (r) { return r.json(); })
       .then(function (d) {
         data = d;
-        buildChips();
-        applyFilter('All');
+        list = data.videos.slice();
+        buildReel();
+        buildList();
+        window.scrollTo(0, 0);
+        index = 0; prevIndex = 0;
+        activate(0);
         dataReady = true;
         maybeInitPlayer();
         tryLiveRefresh();
@@ -102,7 +107,12 @@
         data.videos.sort(function (a, b) { return b.ts - a.ts; });
         var cur = list[index] ? list[index].id : null;
         liveNote = 'Live ✓';
-        applyFilter(filter);
+        list = data.videos.slice();
+        buildReel();
+        buildList();
+        window.scrollTo(0, 0);
+        index = 0; prevIndex = 0;
+        activate(0);
         var ni = list.findIndex(function (v) { return v.id === cur; });
         if (ni > 0) goTo(ni);
       }
@@ -110,28 +120,6 @@
   }
 
   /* ---------- rendering ---------- */
-
-  function buildChips() {
-    var names = ['All'].concat(data.channels.map(function (c) { return c.name; }));
-    $('#chips').innerHTML = names.map(function (n) {
-      return '<button class="chip">' + esc(n) + '</button>';
-    }).join('');
-  }
-
-  function applyFilter(name) {
-    filter = name;
-    list = name === 'All'
-      ? data.videos.slice()
-      : data.videos.filter(function (v) { return v.channel === name; });
-    document.querySelectorAll('.chip').forEach(function (c) {
-      c.classList.toggle('active', c.textContent === name);
-    });
-    buildReel();
-    buildList();
-    window.scrollTo(0, 0);
-    index = 0; prevIndex = 0;
-    activate(0);
-  }
 
   function buildReel() {
     if (io) io.disconnect();
@@ -169,13 +157,21 @@
 
   function animate(dir) {
     if (reducedMotion) return;
+    var el = $('#stageCard');
     var cls = dir >= 0 ? 'anim-next' : 'anim-prev';
-    [['#playerBox'], ['#titlebar']].forEach(function (pair) {
-      var el = $(pair[0]);
-      el.classList.remove('anim-next', 'anim-prev');
-      void el.offsetWidth;
-      el.classList.add(cls);
-    });
+    el.classList.remove('anim-next', 'anim-prev');
+    void el.offsetWidth;
+    el.classList.add(cls);
+  }
+
+  function setBackdrop(id) {
+    var bg = $('#backdropImg');
+    if (bg.dataset.cur === id) return;
+    bg.dataset.cur = id;
+    bg.style.opacity = '0';
+    bg.onload = function () { bg.style.opacity = '1'; };
+    bg.onerror = function () { bg.style.opacity = '1'; };
+    bg.src = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
   }
 
   function activate(i) {
@@ -185,8 +181,8 @@
     var v = list[index];
     $('#ovTitle').textContent = v.title;
     $('#ovMeta').textContent = metaText(v);
-    $('#ytLink').href = 'https://www.youtube.com/watch?v=' + v.id;
     document.title = v.title + ' — हिन्दी न्यूज़';
+    setBackdrop(v.id);
     document.querySelectorAll('.lv-row').forEach(function (r) {
       r.classList.toggle('current', +r.dataset.i === index);
     });
@@ -273,12 +269,6 @@
   $('#nextBtn').addEventListener('click', function () { goTo(index + 1); });
   $('#prevBtn').addEventListener('click', function () { goTo(index - 1); });
   $('#muteBtn').addEventListener('click', toggleMute);
-  $('#fsBtn').addEventListener('click', function () {
-    if (document.fullscreenElement) document.exitFullscreen();
-    else if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen().catch(function () {});
-    }
-  });
   $('#refreshBtn').addEventListener('click', tryLiveRefresh);
   $('#listBtn').addEventListener('click', function () {
     buildList();
@@ -292,17 +282,13 @@
     hideList();
     goTo(+row.dataset.i);
   });
-  $('#chips').addEventListener('click', function (e) {
-    var chip = e.target.closest('.chip');
-    if (chip) applyFilter(chip.textContent);
-  });
 
   /* Swipe left / right to navigate. Vertical swipes keep scrolling the page. */
   var tsX = 0, tsY = 0, tsT = 0;
   document.addEventListener('touchstart', function (e) {
     if (!started) return;
     var t = e.target;
-    if (t.closest('#chips') || t.closest('button') || t.closest('a') ||
+    if (t.closest('button') || t.closest('a') ||
         t.closest('#listview') || t.closest('#startOverlay')) return;
     var touch = e.changedTouches[0];
     tsX = touch.clientX; tsY = touch.clientY; tsT = Date.now();

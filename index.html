@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>हिन्दी न्यूज़</title>
-<link rel="stylesheet" href="styles.css?v=2">
+<link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
 <header>
@@ -15,19 +15,22 @@
       <button id="listBtn" title="All videos" aria-label="All videos">☰</button>
     </div>
   </div>
-  <nav id="chips" aria-label="Channels"></nav>
-  <div id="titlebar">
-    <div id="ovTitle">Loading…</div>
-    <div id="ovMeta"></div>
-  </div>
 </header>
 
 <main id="reel" aria-label="Videos, newest first"></main>
 
+<div id="backdrop"><img id="backdropImg" alt=""></div>
+
 <div id="stage">
-  <div id="playerBox">
-    <div id="player"></div>
-    <div id="taplayer" title="Tap to play / pause"></div>
+  <div id="stageCard">
+    <div id="playerBox">
+      <div id="player"></div>
+      <div id="taplayer" title="Tap to play / pause"></div>
+    </div>
+    <div id="headline">
+      <div id="ovTitle">Loading…</div>
+      <div id="ovMeta"></div>
+    </div>
   </div>
 </div>
 
@@ -35,8 +38,6 @@
   <button id="prevBtn">← Prev</button>
   <div class="mid">
     <button id="muteBtn" aria-label="Mute / unmute">🔇</button>
-    <button id="fsBtn" aria-label="Fullscreen">⛶</button>
-    <a id="ytLink" target="_blank" rel="noopener">YouTube ↗</a>
   </div>
   <button id="nextBtn">Next →</button>
 </div>
@@ -59,6 +60,6 @@
 </div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
-<script src="app.js?v=2"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>

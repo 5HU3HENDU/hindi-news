@@ -1,5 +1,6 @@
-/* Hindi News v2 — very simple reel UI. Dark, big text, big buttons. TV + mobile.
-   Order on screen: heading (top) -> video (middle) -> controls (bottom). */
+/* Hindi News v3 — very simple reel UI. Dark, big text, big buttons. TV + mobile.
+   Order on screen: site title (top) -> video -> full headline -> controls.
+   The video's thumbnail, blurred and darkened, fills the screen behind it. */
 * { box-sizing: border-box; }
 html { scroll-snap-type: y mandatory; }
 body {
@@ -12,12 +13,12 @@ body {
 button { font-family: inherit; color: #fff; }
 :focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
-/* ---- header: site title + chips + news heading ---- */
+/* ---- header: site title only ---- */
 header {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 30;
-  padding: 10px 14px 10px;
+  padding: 10px 14px;
   background: linear-gradient(#0f0f0f 75%, rgba(15,15,15,.88));
 }
 .topbar { display: flex; justify-content: space-between; align-items: center; }
@@ -28,59 +29,58 @@ header {
   background: #1c1c1c; border: 1px solid #444; border-radius: 9px;
   font-size: 20px; cursor: pointer;
 }
-#chips {
-  display: flex; gap: 8px; overflow-x: auto;
-  margin-top: 10px; scrollbar-width: none;
-}
-#chips::-webkit-scrollbar { display: none; }
-.chip {
-  flex: 0 0 auto;
-  padding: 9px 15px; border-radius: 999px;
-  border: 1px solid #555; background: #1c1c1c;
-  font-size: 15px; cursor: pointer;
-}
-.chip.active { background: #fff; color: #000; border-color: #fff; }
-#titlebar { margin-top: 10px; }
-#ovTitle {
-  font-size: clamp(19px, 2.6vw, 28px); font-weight: 700; line-height: 1.3;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-#ovMeta { color: #ccc; font-size: clamp(13px, 1.5vw, 16px); margin-top: 4px; }
 
 /* ---- reel: one full-screen slot per video; scrolling = skipping ---- */
 .slot { height: 100vh; height: 100dvh; scroll-snap-align: start; }
 
-/* ---- fixed player, centred between header and controls ---- */
+/* ---- blurred backdrop: the current video's thumbnail, blown up and dark ---- */
+#backdrop { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+#backdropImg {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: blur(48px) brightness(.32) saturate(1.3);
+  transform: scale(1.15);
+  transition: opacity .5s ease;
+}
+
+/* ---- fixed stage: video + full headline, centred ---- */
 #stage {
   position: fixed; inset: 0; z-index: 10;
   display: flex; align-items: center; justify-content: center;
-  padding: 196px 0 104px;
+  padding: 76px 0 104px;
   pointer-events: none;
+}
+#stageCard {
+  width: min(100%, calc((100dvh - 320px) * 16 / 9), 1400px);
+  pointer-events: auto;
 }
 #playerBox {
   position: relative;
-  width: min(100%, calc((100dvh - 300px) * 16 / 9), 1400px);
+  width: 100%;
   aspect-ratio: 16 / 9;
-  pointer-events: auto;
   background: #000;
 }
 #player, #player iframe { width: 100%; height: 100%; display: block; border: 0; }
 #taplayer { position: absolute; inset: 0; z-index: 2; cursor: pointer; }
+#headline { margin-top: 14px; padding: 0 2px; }
+#ovTitle {
+  font-size: clamp(19px, 2.6vw, 28px); font-weight: 700; line-height: 1.35;
+}
+#ovMeta { color: #ccc; font-size: clamp(13px, 1.5vw, 16px); margin-top: 6px; }
 
 /* ---- navigation animation: video + heading slide in the direction you moved ---- */
 @keyframes slideInNext { from { transform: translateX(60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 @keyframes slideInPrev { from { transform: translateX(-60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-#playerBox.anim-next, #titlebar.anim-next { animation: slideInNext .35s ease; }
-#playerBox.anim-prev, #titlebar.anim-prev { animation: slideInPrev .35s ease; }
+#stageCard.anim-next { animation: slideInNext .35s ease; }
+#stageCard.anim-prev { animation: slideInPrev .35s ease; }
 
-/* ---- bottom controls: Prev left, Next right, the rest in the middle ---- */
+/* ---- bottom controls: Prev left, Next right, mute in the middle ---- */
 #controls {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
   padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
   background: linear-gradient(transparent, rgba(0,0,0,.9) 45%);
 }
-#controls button, #controls a {
+#controls button {
   min-height: 48px; border-radius: 10px; cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
 }
@@ -93,11 +93,10 @@ header {
   padding: 12px 22px; font-size: 18px; font-weight: 700;
 }
 #controls .mid { display: flex; gap: 10px; align-items: center; }
-#muteBtn, #fsBtn {
+#muteBtn {
   background: #262626; border: 1px solid #555;
   min-width: 48px; font-size: 20px; padding: 0 12px;
 }
-#ytLink { color: #fff; padding: 0 8px; font-size: 16px; text-decoration: none; }
 
 /* ---- start gate: big Start button, tap it and the video plays with sound ---- */
 #startOverlay {
@@ -142,14 +141,12 @@ header {
 /* ---- big screens / TV: bigger everything ---- */
 @media (min-width: 1100px) {
   .topbar h1 { font-size: 28px; }
-  .chip { font-size: 18px; padding: 11px 20px; }
   #nextBtn { font-size: 22px; padding: 15px 30px; }
   #prevBtn { font-size: 19px; }
-  #muteBtn, #fsBtn { min-width: 56px; min-height: 56px; font-size: 24px; }
+  #muteBtn { min-width: 56px; min-height: 56px; font-size: 24px; }
   #startBtn { font-size: 30px; padding: 26px 80px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  #playerBox.anim-next, #playerBox.anim-prev,
-  #titlebar.anim-next, #titlebar.anim-prev { animation: none; }
+  #stageCard.anim-next, #stageCard.anim-prev { animation: none; }
 }
