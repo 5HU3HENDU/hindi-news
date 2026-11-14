@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-14T04:10:50.922208Z",
+ "generatedAt": "2026-11-14T04:40:13.759083Z",
  "channels": [
   {
    "name": "DW हिन्दी",
@@ -17,9 +17,9 @@
    "id": "UCN7B-QD0Qgn2boVH5Q0pOWg"
   },
   {
-   "name": "Jansatta",
-   "handle": "@jansatta",
-   "id": "UCICJyUwBYgUOE35F8klEoYw"
+   "name": "Indian Express Hindi",
+   "handle": "@IEHindi",
+   "id": "UC13KrBW4je1iUkEhIZO15AQ"
   },
   {
    "name": "Khabargaon",
@@ -29,12 +29,28 @@
  ],
  "videos": [
   {
+   "id": "5y-rAqMfWgU",
+   "title": "Rahul Gandhi PM बनेंगे? Sonia की Belonging में क्या इशारा मिला? Netanagri | PM Modi | Priyanka",
+   "channel": "The Lallantop",
+   "published": "2026-11-14T04:30:16Z",
+   "ts": 1794630616,
+   "dur": 7282
+  },
+  {
    "id": "C7aMcJV5KFU",
    "title": "ROAST Pakistan Cricket | Furqan Bhatti Roast | 7 सवाल 93000 जवाब| IND vs PAK |Zero Cricket Knowledge",
    "channel": "The Lallantop",
    "published": "2026-11-14T03:30:39Z",
    "ts": 1794627039,
    "dur": 2916
+  },
+  {
+   "id": "afipF2q4QUk",
+   "title": "Sonia Gandhi Book में किन बातों पर चुप हैं? Maneka Gandhi और PM Modi पर क्या बोलीं?| Saurabh Dwivedi",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-14T03:30:22Z",
+   "ts": 1794627022,
+   "dur": 8459
   },
   {
    "id": "IpcHA0n7gxg",
@@ -61,20 +77,28 @@
    "dur": 287
   },
   {
-   "id": "OfX7AA_Rb4c",
-   "title": "Ladli Behna Yojana के ₹1500 जारी, खाते में नहीं आए पैसे तो ऐसे करें चेक | CM Mohan Yadav",
-   "channel": "Jansatta",
-   "published": "2026-11-14T02:30:00Z",
-   "ts": 1794623400,
-   "dur": 484
-  },
-  {
    "id": "QWPkUc0foiY",
    "title": "जेनसन हुआंग के जाने से डूब जाएगी एनवीडिया? [Musk Wants Jensen Huang, Is Nvidia's Empire in Danger?]",
    "channel": "DW हिन्दी",
    "published": "2026-11-14T02:15:31Z",
    "ts": 1794622531,
    "dur": 349
+  },
+  {
+   "id": "49sKbnqW7e4",
+   "title": "Usman Khawaja vs Pat Cummins: Sandpapergate पर Australia टीम में खुली जंग, David Warner भी कूदे",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-14T01:30:20Z",
+   "ts": 1794619820,
+   "dur": 524
+  },
+  {
+   "id": "uVqtMv19Jns",
+   "title": "Rahul Gandhi ने PM Modi पर क्यों लगाया Phone Tapping का आरोप, अब क्या चुनौती दी? Saurabh Dwivedi",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-14T01:00:17Z",
+   "ts": 1794618017,
+   "dur": 418
   },
   {
    "id": "-V_bVGZKeaY",
@@ -101,12 +125,12 @@
    "dur": 135
   },
   {
-   "id": "Hs-TgRTHbtw",
-   "title": "US Midterm Result: Trump की Immigration Policy को खत्म करेंगे Democrats? | America",
-   "channel": "Jansatta",
-   "published": "2026-11-13T17:07:28Z",
-   "ts": 1794589648,
-   "dur": 636
+   "id": "3upeFDoRkng",
+   "title": "Microsoft Outage या सबसे बड़ा Cyber Attack, कैसे ठप पड़े दुनियाभर के बैंक, एयरपोर्ट और अस्पताल?",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-13T16:53:01Z",
+   "ts": 1794588781,
+   "dur": 883
   },
   {
    "id": "LhFC50zLqN0",
@@ -189,14 +213,6 @@
    "dur": 544
   },
   {
-   "id": "ZVwRlLme0h8",
-   "title": "US Midterm Elections 2026 के बाद H-1b Visa पर Trump का बड़ा फैसला?| America| Republican",
-   "channel": "Jansatta",
-   "published": "2026-11-13T14:30:12Z",
-   "ts": 1794580212,
-   "dur": 755
-  },
-  {
    "id": "8DAgz0dlPQQ",
    "title": "Yamuna में मछलियों के मरने का मामला, दिल्ली सरकार और AAP ने एक दूसरे पर लगाए आरोप (BBC Hindi)",
    "channel": "BBC News Hindi",
@@ -237,14 +253,6 @@
    "dur": 251
   },
   {
-   "id": "aZmUJHer0sk",
-   "title": "NCP Merger या Split, Sunetra Pawar की चुप्पी के पीछे क्या? विधायकों के दावे से महाराष्ट्र में हलचल!",
-   "channel": "Jansatta",
-   "published": "2026-11-13T13:30:16Z",
-   "ts": 1794576616,
-   "dur": 539
-  },
-  {
    "id": "fcEwY6z5gvA",
    "title": "12 घंटे तक Microsoft ठप! Outlook, Teams और Copilot क्यों हुए Down? पूरी कहानी",
    "channel": "Khabargaon",
@@ -277,12 +285,12 @@
    "dur": 276
   },
   {
-   "id": "Tp8BQ7KPoDA",
-   "title": "पढ़ाई छोड़कर शुरू किया अपना Startup, Pan की खेती करने वाली Gen Z किसान Mayankita की कहनी",
-   "channel": "The Lallantop",
-   "published": "2026-11-13T12:30:24Z",
-   "ts": 1794573024,
-   "dur": 1104
+   "id": "w8bfEsPUw4Q",
+   "title": "Salman Akhtar से मिलिए Sukh-Dukh के नए एपिसोड में | Releasing 14 November, 6.00 PM | Saurabh Dwivedi",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-13T12:30:22Z",
+   "ts": 1794573022,
+   "dur": 242
   },
   {
    "id": "mFYpESwoi0g",
@@ -301,20 +309,12 @@
    "dur": 762
   },
   {
-   "id": "BD3s18ZZfaU",
-   "title": "IND vs NZ: 89 रन पर ढेर Team India, वनडे इतिहास की दूसरी सबसे बड़ी हार! विलेन कौन?",
-   "channel": "Jansatta",
-   "published": "2026-11-13T11:15:27Z",
-   "ts": 1794568527,
-   "dur": 503
-  },
-  {
-   "id": "HYZvF4rbmdQ",
-   "title": "Rahul Gandhi Phone Tapping Claim: 'PM मेरा फोन टैप करवा रहे', Pegasus से Apple Alert तक का मामला",
-   "channel": "Jansatta",
-   "published": "2026-11-13T10:40:38Z",
-   "ts": 1794566438,
-   "dur": 480
+   "id": "Hzbj60FAaV0",
+   "title": "Nvidia Chief Jensen Huang Resigns के बाद भारतीय कंपनियां किस बात पर ध्यान दें? | Vaichariki",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-13T11:30:00Z",
+   "ts": 1794569400,
+   "dur": 515
   },
   {
    "id": "p_-IRMgexc4",
@@ -341,12 +341,12 @@
    "dur": 272
   },
   {
-   "id": "reOd9pAByJI",
-   "title": "Sonam Wangchuk Ladakh Protest:'मुझे हाउस अरेस्ट किया गया'- सोनम वांगचुक, लद्दाख में क्यों बढ़ा तनाव?",
-   "channel": "Jansatta",
-   "published": "2026-11-13T07:17:29Z",
-   "ts": 1794554249,
-   "dur": 619
+   "id": "GIUEA6NbMuw",
+   "title": "OBC Reservation Creamy Layer वाले अफसरों को Supreme Court के फैसले से हुआ बंपर फायदा | UPSC | IAS",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-13T06:56:54Z",
+   "ts": 1794553014,
+   "dur": 762
   },
   {
    "id": "faQ4_jPgQxA",
@@ -357,12 +357,20 @@
    "dur": 1025
   },
   {
-   "id": "NzGyynz7d_M",
-   "title": "Helle Lyng Exclusive Interview: PM Modi से सवाल पूछने वाली पत्रकार का वीजा क्यों रद्द हुआ?",
-   "channel": "Jansatta",
-   "published": "2026-11-13T06:26:29Z",
-   "ts": 1794551189,
-   "dur": 483
+   "id": "K2FV0Jwf8uQ",
+   "title": "Artificial Rain पर करोड़ों खर्च होते हैं, पर इन नुकसानों के बारे में जानते हैं आप? Cloud Seeding",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-13T04:30:25Z",
+   "ts": 1794544225,
+   "dur": 539
+  },
+  {
+   "id": "wbLMynljkI4",
+   "title": "Pakistani Spy के जाल में कैसे फंसा IAF का विंग कमांडर, Air Force के कौन से सीक्रेट दे दिए?",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-13T03:30:04Z",
+   "ts": 1794540604,
+   "dur": 1075
   },
   {
    "id": "Uc_4mW_gOH4",
@@ -389,12 +397,12 @@
    "dur": 541
   },
   {
-   "id": "Jv6pyntS8Bo",
-   "title": "8th Pay Commission: ₹69,000 Minimum Salary, 67% Pension! HRA और Increment पर NC-JCM की 5 बड़ी मांगें",
-   "channel": "Jansatta",
-   "published": "2026-11-13T02:30:12Z",
-   "ts": 1794537012,
-   "dur": 628
+   "id": "VIpHcqskzmc",
+   "title": "Adani Greens को Maharashtra Govt से मिला ₹224 करोड़ का फायदा? क्यों गिराई ₹5675 करोड़ की लागत?",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-13T01:30:09Z",
+   "ts": 1794533409,
+   "dur": 741
   },
   {
    "id": "UKTFAlJOXfI",
@@ -405,28 +413,12 @@
    "dur": 303
   },
   {
-   "id": "VJDLryDeFOE",
-   "title": "Chhath Special Train: 'बाथरूम में बैठकर जाना पड़ रहा', आनंद विहार स्टेशन पर यात्रियों का दर्द!",
-   "channel": "Jansatta",
-   "published": "2026-11-12T17:00:03Z",
-   "ts": 1794502803,
-   "dur": 935
-  },
-  {
    "id": "IvMPrX3h4bc",
    "title": "Jensen huang के इस्तीफे के बाद Nvidia की कमान कौन संभालेगा? China | Rajdoot E 400",
    "channel": "Khabargaon",
    "published": "2026-11-12T16:26:35Z",
    "ts": 1794500795,
    "dur": 1010
-  },
-  {
-   "id": "oTinq30K8uY",
-   "title": "Parliament Special Session: शीतकालीन सत्र से पहले विशेष सत्र? परिसीमन पर सरकार का क्या प्लान",
-   "channel": "Jansatta",
-   "published": "2026-11-12T16:21:19Z",
-   "ts": 1794500479,
-   "dur": 402
   },
   {
    "id": "IFh6pxpBwfg",
@@ -445,14 +437,6 @@
    "dur": 710
   },
   {
-   "id": "pDd241ZK-yc",
-   "title": "IPL 2027 Trade:Hardik Pandya पंजाब के लिए करेंगे कमाल?मुंबई को मिले Arshdeep Singh, किसे होगा फायदा?",
-   "channel": "Jansatta",
-   "published": "2026-11-12T15:15:31Z",
-   "ts": 1794496531,
-   "dur": 440
-  },
-  {
    "id": "Cbc1I0P14jk",
    "title": "Sonia Gandhi की किताब Belonging: A journey of love में किन बातों का ज़िक्र नहीं है? | (BBC Hindi)",
    "channel": "BBC News Hindi",
@@ -461,12 +445,12 @@
    "dur": 2967
   },
   {
-   "id": "kgH264BdK90",
-   "title": "Honey Trap History to Nvidia CEO resignation: 3,000 साल पुराना जासूसी खेल! माता हरी से Nvidia तक",
-   "channel": "Jansatta",
-   "published": "2026-11-12T14:41:03Z",
-   "ts": 1794494463,
-   "dur": 1058
+   "id": "llirHNLUtdA",
+   "title": "50,000 रुपए तक का वादा करके देश भर की महिलाओं के शरीर से अंडे निकालता था ये रैकेट | Egg Harvesting",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-12T15:04:42Z",
+   "ts": 1794495882,
+   "dur": 466
   },
   {
    "id": "a5WxiCfzjH4",
@@ -485,12 +469,12 @@
    "dur": 230
   },
   {
-   "id": "T2bSQdDHDSQ",
-   "title": "Owaisi - Chandrashekhar Alliance : CM फेस चंद्रशेखर आजाद | SP, BSP या BJP किसका बदलेगा चुनावी गणित?",
-   "channel": "Jansatta",
-   "published": "2026-11-12T11:47:43Z",
-   "ts": 1794484063,
-   "dur": 720
+   "id": "ek_GNZxkbl8",
+   "title": "Anubhav Singh Bassi का Lucknow Stand-Up Comedy Show कैंसिल हुआ तो बस्सी ने किसे इन्वाइट किया?",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-12T11:44:52Z",
+   "ts": 1794483892,
+   "dur": 390
   },
   {
    "id": "PVowdiO0TGU",
@@ -499,14 +483,6 @@
    "published": "2026-11-12T11:11:18Z",
    "ts": 1794481878,
    "dur": 349
-  },
-  {
-   "id": "SSWIbJLCwAA",
-   "title": "Nvidia CEO Jensen Huang Controversy: जेनसन हुआंग का नया अफेयर आया सामने, क्या Donald Trump बचाएंगे",
-   "channel": "Jansatta",
-   "published": "2026-11-12T10:45:15Z",
-   "ts": 1794480315,
-   "dur": 508
   },
   {
    "id": "ZBp17Nf4FBA",
@@ -525,12 +501,36 @@
    "dur": 246
   },
   {
+   "id": "4frMSYXBFY4",
+   "title": "कागजों में खत्म हो गई गरीबी, लेकिन दो वक्त की रोटी के लिए क्यों तरस रहे करोड़ों भारतीय? Vaichariki",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-12T06:30:27Z",
+   "ts": 1794465027,
+   "dur": 417
+  },
+  {
+   "id": "wBi6BikqpcE",
+   "title": "Yamuna की कहानी, जिसने Delhi को बनाया, लेकिन खुद किस संकट में है?",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-12T04:30:37Z",
+   "ts": 1794457837,
+   "dur": 1041
+  },
+  {
    "id": "je9beZ-bmiE",
    "title": "Gadi Eisenkot अगर इसराइल के नए PM बने तो भारत पर क्या असर होगा? (BBC Hindi)",
    "channel": "BBC News Hindi",
    "published": "2026-11-12T02:30:30Z",
    "ts": 1794450630,
    "dur": 341
+  },
+  {
+   "id": "sHgeCNM98Xs",
+   "title": "Tamil Nadu CM Vijay को सता रहा TVK सरकार गिरने का डर, विधायकों के साथ सीक्रेट मीटिंग में क्या हुआ?",
+   "channel": "Indian Express Hindi",
+   "published": "2026-11-12T02:30:28Z",
+   "ts": 1794450628,
+   "dur": 418
   },
   {
    "id": "YjhP410CpW4",

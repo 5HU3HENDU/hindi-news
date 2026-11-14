@@ -15,7 +15,7 @@ CHANNELS = [
     {"name": "DW हिन्दी", "handle": "@dwhindi", "id": "UCc7pPNFBvIhI4iV7m8plJuA"},
     {"name": "The Lallantop", "handle": "@TheLallantop", "id": "UCx8Z14PpntdaxCt2hakbQLQ"},
     {"name": "BBC News Hindi", "handle": "@BBCHindi", "id": "UCN7B-QD0Qgn2boVH5Q0pOWg"},
-    {"name": "Jansatta", "handle": "@jansatta", "id": "UCICJyUwBYgUOE35F8klEoYw"},
+    {"name": "Indian Express Hindi", "handle": "@IEHindi", "id": "UC13KrBW4je1iUkEhIZO15AQ"},
     {"name": "Khabargaon", "handle": "@KhabarGaon", "id": "UClhHB0_iXbn8Cc0x5YzcvIg"},
 ]
 PER_CHANNEL = 15
