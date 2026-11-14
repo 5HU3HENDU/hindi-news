@@ -57,7 +57,7 @@
   /* ---------- data ---------- */
 
   function loadData() {
-    fetch('videos.json?v=6')
+    fetch('videos.json?v=7')
       .then(function (r) { return r.json(); })
       .then(function (d) {
         data = d;

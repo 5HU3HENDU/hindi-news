@@ -3,13 +3,13 @@
    versioned assets and icons. Only same-origin requests are handled; YouTube
    embeds and API calls pass through untouched. Old caches are deleted on
    activate, so a new deploy never serves a stale shell. */
-var CACHE = 'hindi-news-v6';
+var CACHE = 'hindi-news-v7';
 var SHELL = [
   './',
   'index.html',
-  'styles.css?v=6',
-  'app.js?v=6',
-  'videos.json?v=6',
+  'styles.css?v=7',
+  'app.js?v=7',
+  'videos.json?v=7',
   'manifest.json',
   'icon.svg',
   'icon-maskable.svg'
