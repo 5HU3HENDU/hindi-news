@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>हिन्दी न्यूज़</title>
-<link rel="stylesheet" href="styles.css?v=1">
+<link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 <header>
@@ -16,6 +16,10 @@
     </div>
   </div>
   <nav id="chips" aria-label="Channels"></nav>
+  <div id="titlebar">
+    <div id="ovTitle">Loading…</div>
+    <div id="ovMeta"></div>
+  </div>
 </header>
 
 <main id="reel" aria-label="Videos, newest first"></main>
@@ -27,17 +31,21 @@
   </div>
 </div>
 
-<div id="soundPill" hidden>🔊 Tap for sound</div>
-
-<div id="overlay">
-  <div id="ovTitle">Loading…</div>
-  <div id="ovMeta"></div>
-  <div id="ovBtns">
-    <button id="prevBtn">↑ Prev</button>
-    <button id="nextBtn">Next ↓</button>
+<div id="controls">
+  <button id="prevBtn">← Prev</button>
+  <div class="mid">
     <button id="muteBtn" aria-label="Mute / unmute">🔇</button>
     <button id="fsBtn" aria-label="Fullscreen">⛶</button>
     <a id="ytLink" target="_blank" rel="noopener">YouTube ↗</a>
+  </div>
+  <button id="nextBtn">Next →</button>
+</div>
+
+<div id="startOverlay">
+  <div class="start-inner">
+    <h1>हिन्दी न्यूज़</h1>
+    <p>5 channels • newest first</p>
+    <button id="startBtn">▶&nbsp; Start</button>
   </div>
 </div>
 
@@ -51,6 +59,6 @@
 </div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
-<script src="app.js?v=1"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>

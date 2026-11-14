@@ -1,7 +1,8 @@
-/* Hindi News — reel-style player.
+/* Hindi News v2 — reel-style player.
    One merged feed (newest first) across 5 Hindi news channels.
-   Scroll / swipe / arrow keys = skip to next video. Video auto-plays muted
-   on load; first tap unmutes. Auto-advances when a video ends.
+   Start gate: tap the big Start button and the newest video plays with sound.
+   Skip like a reel: swipe left/right, scroll, arrow keys, or Prev / Next.
+   Navigation slides the video + heading in the direction you moved.
    Data: videos.json (snapshot). Best-effort live refresh via the public
    YouTube RSS feeds through a CORS proxy; snapshot stands if that fails. */
 (function () {
@@ -12,9 +13,9 @@
   var data = null;          // {generatedAt, channels, videos}
   var list = [];            // filtered videos
   var filter = 'All';
-  var index = 0;
+  var index = 0, prevIndex = 0;
   var player = null, playerReady = false, apiReady = false, dataReady = false;
-  var muted = true, justUnmuted = false, liveNote = '';
+  var started = false, muted = true, liveNote = '';
   var currentId = null;
   var io = null, actTimer = null;
 
@@ -24,24 +25,31 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+  /* Precise relative time — no rounding: "43 min ago", "1 h 23 min ago". */
   function relTime(ts) {
     var s = Math.floor(Date.now() / 1000) - ts;
     if (s < 60) return 'just now';
     var m = Math.floor(s / 60);
     if (m < 60) return m + ' min ago';
     var h = Math.floor(m / 60);
-    if (h < 24) return h + ' h ago';
+    if (h < 24) {
+      var rm = m % 60;
+      return rm ? h + ' h ' + rm + ' min ago' : h + ' h ago';
+    }
     var d = Math.floor(h / 24);
     if (d === 1) return 'Yesterday';
     if (d < 7) return d + ' days ago';
     return new Date(ts * 1000).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
   }
   function thumb(id) { return 'https://i.ytimg.com/vi/' + id + '/mqdefault.jpg'; }
+  function metaText(v) {
+    return v.channel + ' • ' + relTime(v.ts) + ' • ' + (index + 1) + ' / ' + list.length;
+  }
 
   /* ---------- data ---------- */
 
   function loadData() {
-    fetch('videos.json?v=1')
+    fetch('videos.json?v=2')
       .then(function (r) { return r.json(); })
       .then(function (d) {
         data = d;
@@ -121,7 +129,7 @@
     buildReel();
     buildList();
     window.scrollTo(0, 0);
-    index = 0;
+    index = 0; prevIndex = 0;
     activate(0);
   }
 
@@ -159,21 +167,34 @@
 
   /* ---------- playback ---------- */
 
+  function animate(dir) {
+    if (reducedMotion) return;
+    var cls = dir >= 0 ? 'anim-next' : 'anim-prev';
+    [['#playerBox'], ['#titlebar']].forEach(function (pair) {
+      var el = $(pair[0]);
+      el.classList.remove('anim-next', 'anim-prev');
+      void el.offsetWidth;
+      el.classList.add(cls);
+    });
+  }
+
   function activate(i) {
     if (!list.length) return;
+    prevIndex = index;
     index = ((i % list.length) + list.length) % list.length;
     var v = list[index];
     $('#ovTitle').textContent = v.title;
-    $('#ovMeta').textContent = v.channel + ' • ' + relTime(v.ts) +
-      ' • ' + (index + 1) + ' / ' + list.length;
+    $('#ovMeta').textContent = metaText(v);
     $('#ytLink').href = 'https://www.youtube.com/watch?v=' + v.id;
     document.title = v.title + ' — हिन्दी न्यूज़';
     document.querySelectorAll('.lv-row').forEach(function (r) {
       r.classList.toggle('current', +r.dataset.i === index);
     });
+    if (index !== prevIndex) animate(index > prevIndex ? 1 : -1);
     if (playerReady && currentId !== v.id) {
       currentId = v.id;
-      player.loadVideoById(v.id);
+      if (started) player.loadVideoById(v.id);
+      else player.cueVideoById(v.id);
     }
   }
 
@@ -189,14 +210,13 @@
     player = new YT.Player('player', {
       videoId: list[0].id,
       playerVars: {
-        autoplay: 1, mute: 1, rel: 0, modestbranding: 1,
+        autoplay: 0, mute: 1, rel: 0, modestbranding: 1,
         playsinline: 1, controls: 0, disablekb: 1, fs: 0
       },
       events: {
         onReady: function () {
           playerReady = true;
           player.mute();
-          player.playVideo();
           activate(index);
         },
         onStateChange: function (e) {
@@ -212,37 +232,43 @@
     maybeInitPlayer();
   };
 
+  /* ---------- start gate ---------- */
+
+  function startPlayback() {
+    if (started) return;
+    started = true;
+    muted = false;
+    $('#startOverlay').classList.add('hidden');
+    $('#muteBtn').textContent = '🔊';
+    if (playerReady) {
+      player.unMute();
+      player.setVolume(100);
+      player.playVideo();
+    }
+  }
+  $('#startBtn').addEventListener('click', startPlayback);
+
   /* ---------- sound ---------- */
 
-  function unmuteOnce() {
-    if (!muted) return;
-    muted = false;
-    justUnmuted = true;
-    setTimeout(function () { justUnmuted = false; }, 500);
-    if (playerReady) { player.unMute(); player.setVolume(100); }
-    $('#soundPill').hidden = true;
-    $('#muteBtn').textContent = '🔊';
-  }
   function toggleMute() {
-    if (!playerReady) return;
-    if (muted) { unmuteOnce(); }
-    else {
+    if (!playerReady || !started) return;
+    if (muted) {
+      muted = false;
+      player.unMute();
+      $('#muteBtn').textContent = '🔊';
+    } else {
       muted = true;
       player.mute();
-      $('#soundPill').hidden = false;
       $('#muteBtn').textContent = '🔇';
     }
   }
-  document.addEventListener('pointerdown', unmuteOnce);
-  document.addEventListener('keydown', unmuteOnce);
 
   /* ---------- events ---------- */
 
   $('#taplayer').addEventListener('click', function () {
-    if (justUnmuted) { justUnmuted = false; return; }
-    if (!playerReady) return;
-    if (!muted && player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
-    else { unmuteOnce(); player.playVideo(); }
+    if (!playerReady || !started) return;
+    if (player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
+    else player.playVideo();
   });
   $('#nextBtn').addEventListener('click', function () { goTo(index + 1); });
   $('#prevBtn').addEventListener('click', function () { goTo(index - 1); });
@@ -255,6 +281,7 @@
   });
   $('#refreshBtn').addEventListener('click', tryLiveRefresh);
   $('#listBtn').addEventListener('click', function () {
+    buildList();
     $('#listview').hidden = false;
     document.body.style.overflow = 'hidden';
   });
@@ -269,7 +296,33 @@
     var chip = e.target.closest('.chip');
     if (chip) applyFilter(chip.textContent);
   });
+
+  /* Swipe left / right to navigate. Vertical swipes keep scrolling the page. */
+  var tsX = 0, tsY = 0, tsT = 0;
+  document.addEventListener('touchstart', function (e) {
+    if (!started) return;
+    var t = e.target;
+    if (t.closest('#chips') || t.closest('button') || t.closest('a') ||
+        t.closest('#listview') || t.closest('#startOverlay')) return;
+    var touch = e.changedTouches[0];
+    tsX = touch.clientX; tsY = touch.clientY; tsT = Date.now();
+  }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (!tsT) return;
+    var touch = e.changedTouches[0];
+    var dx = touch.clientX - tsX, dy = touch.clientY - tsY;
+    tsT = 0;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      if (dx < 0) goTo(index + 1);
+      else goTo(index - 1);
+    }
+  }, { passive: true });
+
   document.addEventListener('keydown', function (e) {
+    if (!started) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'n' || e.key === 'N') startPlayback();
+      return;
+    }
     if (e.key === 'n' || e.key === 'N') goTo(index + 1);
     else if (e.key === 'p' || e.key === 'P') goTo(index - 1);
     else if (e.key === 'm' || e.key === 'M') toggleMute();
@@ -280,6 +333,11 @@
     $('#listview').hidden = true;
     document.body.style.overflow = '';
   }
+
+  /* Keep the "x min ago" line honest while the page stays open. */
+  setInterval(function () {
+    if (list.length) $('#ovMeta').textContent = metaText(list[index]);
+  }, 60000);
 
   loadData();
 })();
