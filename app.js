@@ -1,12 +1,19 @@
-/* Hindi News v3 — reel-style player.
+/* Hindi News v4 — reel-style player.
    One merged feed (newest first) across 5 Hindi news channels.
    Start gate: tap the big Start button and the newest video plays with sound.
    Skip like a reel: swipe left/right, scroll, arrow keys, or Prev / Next.
    Navigation slides the video + headline in the direction you moved.
    The headline sits under the video in full (never clipped); the video's
    thumbnail, blurred and darkened, fills the screen behind it.
-   Data: videos.json (snapshot). Best-effort live refresh via the public
-   YouTube RSS feeds through a CORS proxy; snapshot stands if that fails. */
+   Data: videos.json (snapshot). Live refresh on load fetches each channel's
+   YouTube RSS through public proxies, round-robin (see tryLiveRefresh).
+   Proxy test results, 2026-11-14: only rss2json returns the feed. allorigins,
+   cors.dev and cors.lol fetch fine but YouTube answers them with a 404 —
+   Google blocks datacenter IPs, which is also why plain curl from a server
+   404s. codetabs 522s, cors.eu.org 403s (Cloudflare challenge). corsproxy.io,
+   corsproxy.dev and Corsfix need API keys, so they are not used. A Cloudflare
+   Worker of our own would run on datacenter IPs too, so it would likely hit
+   the same YouTube 404 — rss2json is the working route for now. */
 (function () {
   'use strict';
 
@@ -50,7 +57,7 @@
   /* ---------- data ---------- */
 
   function loadData() {
-    fetch('videos.json?v=3')
+    fetch('videos.json?v=4')
       .then(function (r) { return r.json(); })
       .then(function (d) {
         data = d;
@@ -69,40 +76,88 @@
       });
   }
 
-  /* Best-effort live refresh: YouTube RSS has no CORS, so go through a
-     public proxy. If it fails (it often does), the snapshot just stands. */
+  /* ---------- live refresh: round-robin proxies ---------- */
+
+  /* YouTube's RSS sends no CORS headers, so the page fetches it through a
+     public proxy. The list rotates its starting point on every load, and each
+     channel falls through to the next proxy when one fails. rss2json returns
+     JSON (10 newest items, no key needed); the others return raw XML. */
+  var PROXIES = [
+    { name: 'rss2json', json: true, url: function (feed) {
+      return 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feed);
+    } },
+    { name: 'allorigins', json: false, url: function (feed) {
+      return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(feed);
+    } },
+    { name: 'cors.dev', json: false, url: function (feed) {
+      return 'https://proxy.cors.dev/' + feed;
+    } }
+  ];
+  var proxyStart = 0;
+
+  function addVideo(id, title, pub, ch) {
+    if (data.videos.some(function (v) { return v.id === id; })) return false;
+    if (/#shorts/i.test(title)) return false;
+    var ts = Math.floor(Date.parse(pub) / 1000);
+    if (!ts) return false;
+    data.videos.push({ id: id, title: title, channel: ch.name, published: pub, ts: ts, dur: null });
+    return true;
+  }
+
+  function parseRssJson(d, ch) {
+    var n = 0;
+    (d.items || []).forEach(function (it) {
+      if (!it.link || !it.title) return;
+      var m = /[?&]v=([A-Za-z0-9_-]{11})/.exec(it.link) ||
+              /^yt:video:([A-Za-z0-9_-]{11})$/.exec(it.guid || '');
+      if (!m) return;
+      /* rss2json pubDate is "YYYY-MM-DD HH:MM:SS" (UTC); make it ISO first. */
+      var pub = String(it.pubDate || '').replace(' ', 'T') + 'Z';
+      if (addVideo(m[1], it.title, pub, ch)) n++;
+    });
+    return n;
+  }
+
+  function parseRssXml(text, ch) {
+    var n = 0;
+    var xml = new DOMParser().parseFromString(text, 'text/xml');
+    var entries = xml.getElementsByTagName('entry');
+    for (var i = 0; i < entries.length; i++) {
+      var en = entries[i];
+      var idEl = en.getElementsByTagName('yt:videoId')[0];
+      var tEl = en.getElementsByTagName('title')[0];
+      var pEl = en.getElementsByTagName('published')[0];
+      if (!idEl || !tEl || !pEl) continue;
+      if (addVideo(idEl.textContent, tEl.textContent, pEl.textContent, ch)) n++;
+    }
+    return n;
+  }
+
+  function fetchViaProxy(ch, order) {
+    if (!order.length) return Promise.resolve(0);
+    var px = order[0];
+    var feed = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + ch.id;
+    var ctrl = new AbortController();
+    var timer = setTimeout(function () { ctrl.abort(); }, 8000);
+    return fetch(px.url(feed), { signal: ctrl.signal })
+      .then(function (r) {
+        clearTimeout(timer);
+        if (!r.ok) throw new Error('http ' + r.status);
+        return px.json ? r.json() : r.text();
+      })
+      .then(function (d) {
+        return px.json ? parseRssJson(d, ch) : parseRssXml(d, ch);
+      })
+      .catch(function () { return fetchViaProxy(ch, order.slice(1)); });
+  }
+
   function tryLiveRefresh() {
     if (!data) return;
-    var added = 0;
-    var jobs = data.channels.map(function (ch) {
-      var url = 'https://api.allorigins.win/raw?url=' +
-        encodeURIComponent('https://www.youtube.com/feeds/videos.xml?channel_id=' + ch.id);
-      var ctrl = new AbortController();
-      var timer = setTimeout(function () { ctrl.abort(); }, 8000);
-      return fetch(url, { signal: ctrl.signal })
-        .then(function (r) { clearTimeout(timer); if (!r.ok) return; return r.text(); })
-        .then(function (text) {
-          if (!text) return;
-          var xml = new DOMParser().parseFromString(text, 'text/xml');
-          var entries = xml.getElementsByTagName('entry');
-          for (var i = 0; i < entries.length; i++) {
-            var en = entries[i];
-            var idEl = en.getElementsByTagName('yt:videoId')[0];
-            var tEl = en.getElementsByTagName('title')[0];
-            var pEl = en.getElementsByTagName('published')[0];
-            if (!idEl || !tEl || !pEl) continue;
-            var id = idEl.textContent;
-            if (data.videos.some(function (v) { return v.id === id; })) continue;
-            if (/#shorts/i.test(tEl.textContent)) continue;
-            var ts = Math.floor(Date.parse(pEl.textContent) / 1000);
-            if (!ts) continue;
-            data.videos.push({ id: id, title: tEl.textContent, channel: ch.name, published: pEl.textContent, ts: ts, dur: null });
-            added++;
-          }
-        })
-        .catch(function () { /* proxy/feed failed — snapshot stands */ });
-    });
-    Promise.all(jobs).then(function () {
+    var order = PROXIES.slice(proxyStart).concat(PROXIES.slice(0, proxyStart));
+    proxyStart = (proxyStart + 1) % PROXIES.length;
+    var jobs = data.channels.map(function (ch) { return fetchViaProxy(ch, order); });
+    Promise.all(jobs).then(function (counts) {
+      var added = counts.reduce(function (a, b) { return a + b; }, 0);
       if (added > 0) {
         data.videos.sort(function (a, b) { return b.ts - a.ts; });
         var cur = list[index] ? list[index].id : null;
